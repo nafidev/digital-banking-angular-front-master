@@ -1,0 +1,131 @@
+<div  class="container mt-2" style="margin-bottom: 200;">
+  <div class="row">
+    <div class="col col-md-6">
+      <div style="position: relative; top:50px; left: 200px" class="card">
+        <div class="card-header" style="background-color: green; color:white">Accounts</div>
+        <div class="card-body">
+          <form [formGroup]="accountFormGroup" (ngSubmit)="handleSearchAccount()">
+          <div class="row no-gutters">
+            <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+                <h6 style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; margin-left:25px; margin-top:10px">Account ID</h6>
+            </div>
+            <div class="col-lg-8 col-md-6 col-sm-12 p-0">
+                <input type="text" formControlName="accountId" class="form-control">
+            </div>
+            <div class="col-lg-1 col-md-3 col-sm-12 p-0">
+                <button type="submit" class="btn btn-base">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+        </div>
+      </form>
+          <ng-template #errorTemplate>
+            <ng-container *ngIf="errorMessage ; else loading">
+              <div class="text-danger">{{errorMessage}}</div>
+            </ng-container>
+            <ng-template #loading>
+              <h4 style="font-family:cursive;">Loading ...</h4>
+            </ng-template>
+          </ng-template>
+          <ng-container *ngIf="accountObservable | async as accountDetails">
+            <div class="mb-2">
+              <label>Account ID :</label>
+              <label><strong>{{accountDetails.accountId}}</strong></label>
+            </div>
+            <div class="mb-2">
+              <label>Balance :</label>
+              <label><strong>{{accountDetails.balance | number : '1.2-2'}}</strong></label>
+            </div>
+            <table class="table">
+              <thead>
+                <th>ID</th><th>Date</th><th>Type</th><th>Amount</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let op of accountDetails.accountOperationDTOS">
+                  <td>{{op.id}}</td>
+                  <td>{{op.operationDate | date : 'dd-MM-yyyy:HH-mm-ss'}}</td>
+                  <td>{{op.type}}</td>
+                  <td class="text-end">{{op.amount | number : '1.2-2'}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <ul class="nav nav-pills">
+              <li *ngFor="let item of [].constructor(accountDetails.totalPages);let page=index">
+                <a [ngClass]="page==currentPage?'btn-info':'btn-outline-info'" (click)="gotoPage(page)" class="btn  ms-1 mt-1">{{page}}</a>
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    
+  <div style="position: relative; top:100px; left: 200px; width: 100%;" class="container bootstrap snippets bootdeys" *ngIf="accountObservable">
+<div class="row">
+  <div class="col-xs-12 col-sm-9">
+    <form class="form-horizontal" [formGroup]="operationFromGroup" (ngSubmit)="handleAccountOperation()" method="post">
+        <div style="margin-right: 130px;" class="panel panel-default">
+          <div class="panel-body text-center">
+           <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-circle profile-avatar" alt="User avatar">
+          </div>
+        </div>
+        
+      <div class="panel panel-default" style="margin-bottom: 100px">
+        
+
+        <div class="panel-heading">
+        <h4 class="panel-title">Operations</h4>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="operationType" value="DEBIT">
+              <label class="form-check-label">DEBIT:</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="operationType" value="CREDIT">
+              <label class="form-check-label">CREDIT:</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="operationType" value="TRANSFER">
+              <label class="form-check-label">TRANSFER:</label>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="operationFromGroup.value.operationType=='TRANSFER'">
+            <label class="col-sm-2 control-label">Account destination</label>
+            <div class="col-sm-10">
+              <input  type="text" formControlName="accountDestination" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Amount</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="amount" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="description" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 20px;" class="form-group">
+          <div class="col-sm-10 col-sm-offset-2">
+            <button type="submit" class="btn btn-success btn-sm">Save</button> 
+          </div>
+        </div>
+        
+      </div>
+
+      
+
+     
+
+      
+    </form>
+  </div>
+</div>
+</div>
+  </div>
+</div>
